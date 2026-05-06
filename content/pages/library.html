@@ -1,0 +1,1867 @@
+<html>
+<head><title>about</title></head>
+<body>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iRODS Library</title>
+    <style>
+        dddd {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ccbody {
+            font-family: Helvetica, Arial, sans-serif;
+            background: #f5f6f7;
+            color: #444444;
+            min-height: 100vh;
+            padding: 86px 0 0;
+        }
+
+        .librarycontainer {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            text-align: left;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            grid-template-rows: auto 1fr;
+            min-height: calc(100vh - 86px - 80px);
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            color: #58595b;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #58595b;
+        }
+
+        .header p {
+            font-size: 1em;
+            color: #777;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 100%;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            grid-column: 1 / -1;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #18bc9c;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .facet {
+            margin-bottom: 20px;
+        }
+
+        .facet-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            color: #333;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            padding: 4px 0;
+        }
+
+        .facet-title:hover {
+            color: #18bc9c;
+        }
+
+        .facet-toggle {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            transition: transform 0.2s;
+            font-size: 12px;
+            line-height: 16px;
+        }
+
+        .facet-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .facet-items {
+            display: block;
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            opacity: 1;
+        }
+
+        .facet-items.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .facet-item {
+            padding: 6px 0;
+            font-size: 0.9em;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 3px;
+            padding: 6px 8px;
+            transition: background-color 0.2s;
+        }
+
+        .facet-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .facet-item.active {
+            background-color: #18bc9c;
+            color: white;
+        }
+
+        .facet-count {
+            font-size: 0.85em;
+            opacity: 0.7;
+            margin-left: 8px;
+        }
+
+        .facet-item.active .facet-count {
+            opacity: 0.9;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 100%;
+        }
+
+        .results-info {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 0.95em;
+            color: #666;
+        }
+
+        .results-count {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .publication-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .publication-item:hover {
+            border-color: #18bc9c;
+            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.15);
+        }
+
+        .pub-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .pub-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .pub-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pub-abstract {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .pub-people {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .person-tag, .org-tag, .event-tag {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 4px 8px;
+            margin: 2px 4px 2px 0;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background-color 0.2s;
+        }
+
+        .person-tag:hover, .org-tag:hover, .event-tag:hover {
+            background: #18bc9c;
+            color: white;
+        }
+
+        .links {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .doc-link {
+            display: inline-block;
+            padding: 5px 10px;
+            background: #f5f5f5;
+            border-radius: 3px;
+            text-decoration: none;
+            color: #18bc9c;
+            font-size: 0.85em;
+            transition: all 0.2s;
+            border: 1px solid #e0e0e0;
+        }
+
+        .doc-link:hover {
+            background: #18bc9c;
+            color: white;
+            border-color: #18bc9c;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .no-results-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: #18bc9c;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #18bc9c;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        /* ===== Editor-mode styles (only visible when body.edit-mode) ===== */
+        .edit-toolbar { display: none; }
+        body.edit-mode .edit-toolbar {
+            display: block;
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .edit-toolbar-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .edit-tabs {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        .edit-tab {
+            padding: 8px 14px;
+            cursor: pointer;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9em;
+            color: #333;
+            transition: all 0.2s;
+        }
+        .edit-tab:hover { background: #e8f0fa; }
+        .edit-tab.active {
+            background: #18bc9c;
+            color: white;
+            border-color: #18bc9c;
+        }
+        .edit-mode-badge {
+            background: #ff9800;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        /* Hide search/facet/result for non-publications edit tabs */
+        body.edit-mode.edit-other .search-box,
+        body.edit-mode.edit-other .sidebar,
+        body.edit-mode.edit-other #mainContent {
+            display: none;
+        }
+        body:not(.edit-mode) #editorTablePanel,
+        body.edit-mode:not(.edit-other) #editorTablePanel {
+            display: none;
+        }
+        body.edit-mode.edit-other #editorTablePanel {
+            display: block;
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: auto;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .btn-primary { background: #18bc9c; color: white; }
+        .btn-primary:hover { background: #149e83; }
+        .btn-success { background: #4caf50; color: white; }
+        .btn-success:hover { background: #45a049; }
+        .btn-danger { background: #f44336; color: white; }
+        .btn-danger:hover { background: #da190b; }
+        .btn-secondary { background: #666; color: white; }
+        .btn-secondary:hover { background: #555; }
+        .btn-small { padding: 5px 10px; font-size: 0.8em; }
+
+        /* Row actions on publication items (edit mode only) */
+        .pub-row-actions { display: none; margin-top: 10px; gap: 8px; }
+        body.edit-mode .pub-row-actions { display: flex; }
+        .pub-related-badge {
+            background: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            color: #999;
+        }
+
+        /* Editor table panel */
+        #editorTablePanel table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        #editorTablePanel thead { background: #f5f5f5; }
+        #editorTablePanel th,
+        #editorTablePanel td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        #editorTablePanel th { font-weight: 600; color: #333; }
+        #editorTablePanel tr:hover { background: #f9f9f9; }
+        .row-actions { display: flex; gap: 8px; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 1000px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h2 { margin: 0; }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+        .close-modal:hover { color: #333; }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        /* Form */
+        #editForm {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        #editForm .form-group { margin: 0; }
+        #editForm .form-group:nth-child(1) { grid-column: 1 / -1; }
+        #editForm[data-table="publications"] .form-group[data-field="abstract"],
+        #editForm[data-table="publications"] .form-group[data-field="authors"],
+        #editForm[data-table="publications"] .form-group[data-field="instantiations"],
+        #editForm[data-table="persons"] .form-group[data-field="organization_id"],
+        #editForm[data-table="organizations"] .form-group[data-field="location_id"],
+        #editForm[data-table="venues"] .form-group[data-field="location_id"] {
+            grid-column: 1 / -1;
+        }
+        #editForm[data-table="events"] .form-group[data-field="name"] { grid-column: 1; }
+        #editForm[data-table="events"] .form-group[data-field="venue_id"] { grid-column: 2; }
+        #editForm[data-table="events"] .form-group[data-field="start_date"] { grid-column: 1; }
+        #editForm[data-table="events"] .form-group[data-field="end_date"] { grid-column: 2; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #333;
+            text-align: left;
+        }
+        #editForm input[type="text"],
+        #editForm input[type="date"],
+        #editForm textarea,
+        #editForm select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95em;
+            font-family: inherit;
+            line-height: normal;
+        }
+        #editForm textarea { min-height: 100px; resize: vertical; }
+        #editForm input:focus,
+        #editForm textarea:focus,
+        #editForm select:focus {
+            outline: none;
+            border-color: #18bc9c;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        /* Autocomplete */
+        .autocomplete-list {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            max-height: 200px;
+            overflow-y: auto;
+            width: 100%;
+            z-index: 10;
+            border-radius: 0 0 4px 4px;
+        }
+        .autocomplete-item {
+            padding: 8px 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+            text-align: left;
+        }
+        .autocomplete-item:hover { background: #f5f5f5; }
+
+        /* Instantiations editor */
+        .instantiation-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: flex-end;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .instantiation-item input, .instantiation-item select { margin: 0; }
+
+
+        /* Success toast */
+        .success-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4caf50;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 4px;
+            display: none;
+            z-index: 2000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .success-message.active { display: block; }
+    </style>
+</head>
+<body>
+<section class="white_bg">
+
+    <div class="librarycontainer">
+
+        <div class="edit-toolbar" id="editToolbar">
+            <div class="edit-toolbar-row">
+                <div class="edit-tabs" id="editTabs">
+                    <div class="edit-tab active" data-tab="publications" onclick="switchEditTab('publications')">Publications <span id="count-publications"></span></div>
+                    <div class="edit-tab" data-tab="persons" onclick="switchEditTab('persons')">Authors <span id="count-persons"></span></div>
+                    <div class="edit-tab" data-tab="organizations" onclick="switchEditTab('organizations')">Organizations <span id="count-organizations"></span></div>
+                    <div class="edit-tab" data-tab="events" onclick="switchEditTab('events')">Events <span id="count-events"></span></div>
+                    <div class="edit-tab" data-tab="venues" onclick="switchEditTab('venues')">Venues <span id="count-venues"></span></div>
+                    <div class="edit-tab" data-tab="locations" onclick="switchEditTab('locations')">Locations <span id="count-locations"></span></div>
+                </div>
+                <button class="btn btn-success btn-small" id="addBtn" onclick="openAddModal(currentEditTab)">+ Add</button>
+                <button class="btn btn-primary btn-small" onclick="downloadDatabase()">Download .sql</button>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <div style="display: flex; gap: 10px; align-items: stretch;">
+                <button onclick="clearSearch()" style="padding: 0 20px; background: #f0f0f0; border: 2px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-weight: 500; transition: all 0.2s; white-space: nowrap;" onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f0f0f0'">Clear</button>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search titles, abstracts, authors, organizations, events..." style="flex: 1; margin: 0;">
+            </div>
+        </div>
+
+        <div class="sidebar" id="sidebar">
+            <div class="facet">
+                <div class="facet-title" onclick="toggleFacet('orgFacets')">
+                    <span class="facet-toggle">▼</span>
+                    Organizations
+                </div>
+                <div class="facet-items" id="orgFacets"></div>
+            </div>
+            <div class="facet">
+                <div class="facet-title" onclick="toggleFacet('yearFacets')">
+                    <span class="facet-toggle">▼</span>
+                    Year
+                </div>
+                <div class="facet-items" id="yearFacets"></div>
+            </div>
+            <div class="facet">
+                <div class="facet-title" onclick="toggleFacet('eventFacets')">
+                    <span class="facet-toggle">▼</span>
+                    Events
+                </div>
+                <div class="facet-items" id="eventFacets"></div>
+            </div>
+            <div class="facet">
+                <div class="facet-title" onclick="toggleFacet('authorFacets')">
+                    <span class="facet-toggle">▼</span>
+                    Authors
+                </div>
+                <div class="facet-items" id="authorFacets"></div>
+            </div>
+            <div class="facet">
+                <div class="facet-title" onclick="toggleFacet('docTypeFacets')">
+                    <span class="facet-toggle">▼</span>
+                    Document Type
+                </div>
+                <div class="facet-items" id="docTypeFacets"></div>
+            </div>
+            </div>
+
+        <div class="main-content" id="mainContent">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading database...</p>
+            </div>
+        </div>
+
+        <div id="editorTablePanel"></div>
+    </div>
+
+    <div class="success-message" id="successMessage"></div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Item</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="editForm"></form>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-success" onclick="saveRecord()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/sql.js@1.8.0/dist/sql-wasm.js"></script>
+    <script>
+        let db = null;
+        let allResults = [];
+        let editMode = false;
+        let currentEditTab = 'publications';
+        let currentTable = null;
+        let editingId = null;
+        const filters = {
+            authors: new Set(),
+            organizations: new Set(),
+            events: new Set(),
+            docTypes: new Set(),
+            years: new Set()
+        };
+
+        const tableSchemas = {
+            publications: [
+                { field: 'title', label: 'Title', type: 'text' },
+                { field: 'abstract', label: 'Abstract', type: 'textarea' },
+                { field: 'date', label: 'Date', type: 'date' },
+                { field: 'event', label: 'Event (optional)', type: 'autocomplete', table: 'events', displayField: 'name', isJunction: true, junctionTable: 'events_publications', junctionForeignKey: 'event_id' },
+                { field: 'authors', label: 'Authors', type: 'multiselect', table: 'persons', displayField: 'name', junctionTable: 'persons_publications' },
+                { field: 'instantiations', label: 'Instantiations', type: 'instantiations' }
+            ],
+            persons: [
+                { field: 'name', label: 'Name', type: 'text' },
+                { field: 'organization_id', label: 'Organization', type: 'autocomplete', table: 'organizations', displayField: 'name' }
+            ],
+            organizations: [
+                { field: 'name', label: 'Name', type: 'text' },
+                { field: 'location_id', label: 'Location', type: 'autocomplete', table: 'locations', displayField: 'city' }
+            ],
+            events: [
+                { field: 'name', label: 'Name', type: 'text' },
+                { field: 'venue_id', label: 'Venue', type: 'autocomplete', table: 'venues', displayField: 'name' },
+                { field: 'start_date', label: 'Start Date', type: 'date' },
+                { field: 'end_date', label: 'End Date', type: 'date' }
+            ],
+            locations: [
+                { field: 'city', label: 'City', type: 'text' },
+                { field: 'state', label: 'State', type: 'text' },
+                { field: 'country', label: 'Country', type: 'text' },
+                { field: 'continent_id', label: 'Continent', type: 'select', sourceTable: 'continents', sourceField: 'name' }
+            ],
+            venues: [
+                { field: 'name', label: 'Name', type: 'text' },
+                { field: 'location_id', label: 'Location', type: 'autocomplete', table: 'locations', displayField: 'city' }
+            ]
+        };
+
+        async function initDB() {
+            const SQL = await initSqlJs({
+                locateFile: file => `https://unpkg.com/sql.js@1.8.0/dist/${file}`
+            });
+            db = new SQL.Database();
+            const response = await fetch('publications.sql');
+            const sqlScript = await response.text();
+            db.exec(sqlScript);
+            renderResults();
+            loadFacets();
+        }
+
+        function loadFacets() {
+             const query = document.getElementById('searchInput').value;
+             
+             // Get search results: all pubs if no query, otherwise search
+             let searchResults;
+             if (!query.trim()) {
+                 const allPubs = db.exec(`
+                     SELECT
+                         pub.id,
+                         pub.title,
+                         pub.abstract,
+                         pub.date,
+                         GROUP_CONCAT(p.name, '|||') as authors,
+                         GROUP_CONCAT(o.name, '|||') as organizations,
+                         GROUP_CONCAT(e.name, '|||') as events
+                     FROM publications pub
+                     LEFT JOIN events_publications ep ON pub.id = ep.publication_id
+                     LEFT JOIN events e ON ep.event_id = e.id
+                     LEFT JOIN persons_publications pp ON pub.id = pp.publication_id
+                     LEFT JOIN persons p ON pp.person_id = p.id
+                     LEFT JOIN organizations o ON p.organization_id = o.id
+                     GROUP BY pub.id
+                 `);
+                 
+                 if (allPubs && allPubs.length > 0) {
+                     const columns = allPubs[0].columns;
+                     searchResults = allPubs[0].values.map(row => {
+                         const obj = {};
+                         columns.forEach((col, i) => obj[col] = row[i]);
+                         // Deduplicate fields
+                         obj.authors = [...new Set((obj.authors || '').split('|||').filter(a => a.trim()))].join('|||');
+                         obj.organizations = [...new Set((obj.organizations || '').split('|||').filter(o => o.trim()))].join('|||');
+                         obj.events = [...new Set((obj.events || '').split('|||').filter(e => e.trim()))].join('|||');
+                         return obj;
+                     });
+                 } else {
+                     searchResults = [];
+                 }
+             } else {
+                 searchResults = searchPublications(query);
+             }
+             
+             // Apply current filters to get the facet count source
+             const countSource = filterResults(searchResults);
+             
+             const authors = db.exec(`
+                 SELECT DISTINCT p.name FROM persons p ORDER BY p.name
+             `)[0]?.values || [];
+             
+             const orgs = db.exec(`
+                 SELECT DISTINCT o.name FROM organizations o ORDER BY o.name
+             `)[0]?.values || [];
+             
+             const events = db.exec(`
+                 SELECT DISTINCT e.name FROM events e ORDER BY e.name
+             `)[0]?.values || [];
+             
+             const docTypes = db.exec(`
+                 SELECT DISTINCT d.name FROM document_types d ORDER BY d.name
+             `)[0]?.values || [];
+
+             // Calculate counts for each facet based on appropriate source
+             const counts = {
+                 authors: {},
+                 organizations: {},
+                 events: {},
+                 docTypes: {},
+                 years: {}
+             };
+
+             countSource.forEach(pub => {
+                 if (pub.authors) {
+                     pub.authors.split('|||').forEach(a => {
+                         a = a.trim();
+                         if (a) counts.authors[a] = (counts.authors[a] || 0) + 1;
+                     });
+                 }
+                 if (pub.organizations) {
+                     pub.organizations.split('|||').forEach(o => {
+                         o = o.trim();
+                         if (o) counts.organizations[o] = (counts.organizations[o] || 0) + 1;
+                     });
+                 }
+                 if (pub.events) {
+                     pub.events.split('|||').forEach(e => {
+                         e = e.trim();
+                         if (e) counts.events[e] = (counts.events[e] || 0) + 1;
+                     });
+                 }
+                 
+                 // Count document types for this publication
+                 const docResult = db.exec(`
+                     SELECT d.name FROM instantiations i
+                     LEFT JOIN document_types d ON i.document_type_id = d.id
+                     WHERE i.publication_id = ?
+                 `, [pub.id]);
+                 
+                 if (docResult && docResult[0]) {
+                     docResult[0].values.forEach(row => {
+                         const docType = row[0];
+                         if (docType) counts.docTypes[docType] = (counts.docTypes[docType] || 0) + 1;
+                     });
+                 }
+                 
+                 // Count year
+                 if (pub.date) {
+                     const year = pub.date.substring(0, 4);
+                     counts.years[year] = (counts.years[year] || 0) + 1;
+                 }
+                 });
+
+             // Filter items to only show those with counts > 0
+             const authorsWithCounts = authors.map(r => r[0]).filter(a => counts.authors[a] > 0);
+             const orgsWithCounts = orgs.map(r => r[0]).filter(o => counts.organizations[o] > 0);
+             const eventsWithCounts = events.map(r => r[0]).filter(e => counts.events[e] > 0);
+             const docTypesWithCounts = docTypes.map(r => r[0]).filter(d => counts.docTypes[d] > 0);
+             const yearsWithCounts = Object.keys(counts.years).filter(y => counts.years[y] > 0).sort().reverse();
+             
+             renderFacet('orgFacets', orgsWithCounts, 'organizations', counts.organizations);
+             renderFacet('yearFacets', yearsWithCounts, 'years', counts.years);
+             renderFacet('eventFacets', eventsWithCounts, 'events', counts.events);
+             renderFacet('authorFacets', authorsWithCounts, 'authors', counts.authors);
+             renderFacet('docTypeFacets', docTypesWithCounts, 'docTypes', counts.docTypes);
+             }
+
+         function renderFacet(elementId, items, filterKey, counts = {}) {
+             const el = document.getElementById(elementId);
+             // Sort items by count (highest first)
+             const sortedItems = items.sort((a, b) => (counts[b] || 0) - (counts[a] || 0));
+             el.innerHTML = sortedItems.map(item => `
+                 <div class="facet-item ${filters[filterKey].has(item) ? 'active' : ''}" 
+                      onclick="toggleFilter('${filterKey}', '${item.replace(/'/g, "\\'")}')">
+                     <span>${item}</span>
+                     <span class="facet-count">${counts[item] || 0}</span>
+                 </div>
+             `).join('');
+         }
+
+        function toggleFilter(filterKey, value) {
+            if (filters[filterKey].has(value)) {
+                filters[filterKey].delete(value);
+            } else {
+                filters[filterKey].add(value);
+            }
+            renderResults();
+            loadFacets();
+            updateURL();
+        }
+
+        function searchPublications(query) {
+            if (!db) return [];
+
+            const searchTerms = query.toLowerCase().split(/\s+/).filter(t => t);
+            
+            let sql = `
+                 SELECT
+                     pub.id,
+                     pub.title,
+                     pub.abstract,
+                     pub.date,
+                     GROUP_CONCAT(p.name, '|||') as authors,
+                     GROUP_CONCAT(o.name, '|||') as organizations,
+                     GROUP_CONCAT(e.name, '|||') as events
+                 FROM publications pub
+                 LEFT JOIN events_publications ep ON pub.id = ep.publication_id
+                 LEFT JOIN events e ON ep.event_id = e.id
+                 LEFT JOIN persons_publications pp ON pub.id = pp.publication_id
+                 LEFT JOIN persons p ON pp.person_id = p.id
+                 LEFT JOIN organizations o ON p.organization_id = o.id
+                 WHERE 1=1
+             `;
+
+            if (searchTerms.length > 0) {
+                const conditions = searchTerms.map(() => `
+                    (LOWER(pub.title) LIKE ? OR 
+                     LOWER(pub.abstract) LIKE ? OR 
+                     LOWER(p.name) LIKE ? OR 
+                     LOWER(o.name) LIKE ? OR 
+                     LOWER(e.name) LIKE ?)
+                `).join(' AND ');
+                sql += ` AND (${conditions})`;
+            }
+
+            sql += ` GROUP BY pub.id ORDER BY pub.date DESC`;
+
+            const params = [];
+            searchTerms.forEach(term => {
+                for (let i = 0; i < 5; i++) {
+                    params.push(`%${term}%`);
+                }
+            });
+
+            try {
+                const result = db.exec(sql, params);
+                if (!result || result.length === 0) return [];
+
+                const columns = result[0].columns;
+                return result[0].values.map(row => {
+                    const obj = {};
+                    columns.forEach((col, i) => obj[col] = row[i]);
+                    return obj;
+                });
+            } catch (e) {
+                console.error('Query error:', e);
+                return [];
+            }
+        }
+
+        function filterResults(publications) {
+            return publications.filter(pub => {
+                // All filters use AND logic (all conditions must be true)
+                
+                // Check authors (AND: all selected authors must be in the publication)
+                if (filters.authors.size > 0) {
+                    const authors = (pub.authors || '').split('|||').map(a => a.trim());
+                    if (![...filters.authors].every(fa => authors.some(a => a === fa))) return false;
+                }
+                
+                // Check organizations (AND: all selected organizations must be in the publication)
+                if (filters.organizations.size > 0) {
+                    const orgs = (pub.organizations || '').split('|||').map(o => o.trim());
+                    if (![...filters.organizations].every(fo => orgs.some(o => o === fo))) return false;
+                }
+                
+                // Check events (AND: all selected events must be in the publication)
+                if (filters.events.size > 0) {
+                    const events = (pub.events || '').split('|||').map(e => e.trim());
+                    if (![...filters.events].every(fe => events.some(e => e === fe))) return false;
+                }
+                
+                // Check years (AND: all selected years must match)
+                if (filters.years.size > 0) {
+                    const year = pub.date ? pub.date.substring(0, 4) : '';
+                    if (![...filters.years].every(y => y === year)) return false;
+                }
+                
+                // Check document types (AND: all selected document types must be in the publication)
+                if (filters.docTypes.size > 0) {
+                    const docResult = db.exec(`
+                        SELECT d.name FROM instantiations i
+                        LEFT JOIN document_types d ON i.document_type_id = d.id
+                        WHERE i.publication_id = ?
+                    `, [pub.id]);
+                    
+                    const pubDocTypes = docResult && docResult[0] ? docResult[0].values.map(row => row[0]) : [];
+                    if (![...filters.docTypes].every(fd => pubDocTypes.some(dt => dt === fd))) return false;
+                }
+                
+                return true;
+            });
+        }
+
+        function renderResults() {
+             if (!db) return;
+
+             const query = document.getElementById('searchInput').value;
+             
+             // Get all publications when no search query, otherwise search
+             if (!query.trim()) {
+                 const allPubs = db.exec(`
+                     SELECT
+                         pub.id,
+                         pub.title,
+                         pub.abstract,
+                         pub.date,
+                         GROUP_CONCAT(p.name, '|||') as authors,
+                         GROUP_CONCAT(o.name, '|||') as organizations,
+                         GROUP_CONCAT(e.name, '|||') as events
+                     FROM publications pub
+                     LEFT JOIN events_publications ep ON pub.id = ep.publication_id
+                     LEFT JOIN events e ON ep.event_id = e.id
+                     LEFT JOIN persons_publications pp ON pub.id = pp.publication_id
+                     LEFT JOIN persons p ON pp.person_id = p.id
+                     LEFT JOIN organizations o ON p.organization_id = o.id
+                     GROUP BY pub.id
+                     ORDER BY pub.date DESC
+                 `);
+                 
+                 if (allPubs && allPubs.length > 0) {
+                     const columns = allPubs[0].columns;
+                     allResults = allPubs[0].values.map(row => {
+                         const obj = {};
+                         columns.forEach((col, i) => obj[col] = row[i]);
+                         // Deduplicate fields
+                         obj.authors = [...new Set((obj.authors || '').split('|||').filter(a => a.trim()))].join('|||');
+                         obj.organizations = [...new Set((obj.organizations || '').split('|||').filter(o => o.trim()))].join('|||');
+                         obj.events = [...new Set((obj.events || '').split('|||').filter(e => e.trim()))].join('|||');
+                         return obj;
+                     });
+                 } else {
+                     allResults = [];
+                 }
+             } else {
+                 allResults = searchPublications(query);
+             }
+             
+             let filtered = filterResults(allResults);
+             
+             // Sort by date in reverse chronological order (most recent first)
+             filtered = filtered.sort((a, b) => {
+                 const dateA = new Date(a.date || '');
+                 const dateB = new Date(b.date || '');
+                 return dateB - dateA;
+             });
+
+             const mainContent = document.getElementById('mainContent');
+             
+             if (filtered.length === 0) {
+                mainContent.innerHTML = `
+                    <div class="no-results">
+                        <div class="no-results-icon"></div>
+                        <h2>No results found</h2>
+                        <p>Try adjusting your search terms or filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            mainContent.innerHTML = `
+                <div class="results-info">
+                    Found <span class="results-count">${filtered.length}</span> publication${filtered.length !== 1 ? 's' : ''}
+                </div>
+                ${filtered.map(pub => renderPublicationItem(pub)).join('')}
+            `;
+        }
+
+        function renderPublicationItem(pub) {
+            const authors = [...new Set((pub.authors || '').split('|||').filter(a => a.trim()))];
+            const orgs = [...new Set((pub.organizations || '').split('|||').filter(o => o.trim()))];
+            const events = [...new Set((pub.events || '').split('|||').filter(e => e.trim()))];
+
+            const docs = db.exec(`
+                SELECT d.name, i.url, i.doi
+                FROM instantiations i
+                LEFT JOIN document_types d ON i.document_type_id = d.id
+                WHERE i.publication_id = ?
+            `, [pub.id]);
+
+            const documentLinks = docs[0]?.values || [];
+
+            return `
+                <div class="publication-item">
+                    <div class="pub-title">${escapeHtml(pub.title)}</div>
+                    <div class="pub-meta">
+                        ${pub.date ? `<div class="pub-meta-item" style="cursor: pointer;" onclick="setFilter('years', '${pub.date.substring(0, 4)}')">${pub.date}</div>` : ''}
+                    </div>
+                    ${pub.abstract ? `<div class="pub-abstract">${toParagraphs(escapeHtml(pub.abstract))}</div>` : ''}
+                    ${authors.length > 0 || orgs.length > 0 || events.length > 0 ? `
+                        <div class="pub-people">
+                            ${authors.map(a => `<span class="person-tag" onclick="setFilter('authors', '${a.replace(/'/g, "\\'")}')">${escapeHtml(a)}</span>`).join('')}
+                            ${orgs.map(o => `<span class="org-tag" onclick="setFilter('organizations', '${o.replace(/'/g, "\\'")}')">${escapeHtml(o)}</span>`).join('')}
+                            ${events.map(e => `<span class="event-tag" onclick="setFilter('events', '${e.replace(/'/g, "\\'")}')">${escapeHtml(e)}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                    ${documentLinks.length > 0 ? `
+                        <div class="links">
+                            ${documentLinks.map(doc => {
+                                const [type, url, doi] = doc;
+                                if (url) {
+                                    return `<a href="${url}" target="_blank" class="doc-link">${type || 'View'}</a>`;
+                                }
+                                return '';
+                            }).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="pub-row-actions">
+                        <button class="btn btn-secondary btn-small" onclick="openEditModal('publications', ${pub.id})">Edit</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteRecord('publications', ${pub.id})">Delete</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function setFilter(filterKey, value) {
+            // Toggle: add or remove value while keeping other filters intact
+            if (filters[filterKey].has(value)) {
+                filters[filterKey].delete(value);
+            } else {
+                filters[filterKey].add(value);
+            }
+            renderResults();
+            loadFacets();
+            updateURL();
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            filters.authors.clear();
+            filters.organizations.clear();
+            filters.events.clear();
+            filters.docTypes.clear();
+            filters.years.clear();
+            renderResults();
+            loadFacets();
+            updateURL();
+        }
+
+        function toParagraphs(text) {
+            const htmlParagraphs = text
+                .split(/\n\s*\n/) // Split by one or more newlines with optional whitespace
+                .filter(para => para.trim() !== "") // Remove empty strings
+                .map(para => `<p>${para.trim()}</p>`) // Wrap in p tags
+                .join('\n'); // Join them back together
+            return htmlParagraphs;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateURL() {
+            const query = document.getElementById('searchInput').value;
+            const params = new URLSearchParams();
+            
+            if (query) params.set('q', query);
+            if (filters.authors.size > 0) params.set('authors', Array.from(filters.authors).join('|||'));
+            if (filters.organizations.size > 0) params.set('orgs', Array.from(filters.organizations).join('|||'));
+            if (filters.events.size > 0) params.set('events', Array.from(filters.events).join('|||'));
+            if (filters.docTypes.size > 0) params.set('docTypes', Array.from(filters.docTypes).join('|||'));
+            if (filters.years.size > 0) params.set('years', Array.from(filters.years).join('|||'));
+            if (editMode) params.set('edit', '1');
+            
+            window.history.replaceState({}, '', params.toString() ? '?' + params.toString() : location.pathname);
+        }
+
+        function loadFromURL() {
+            const params = new URLSearchParams(location.search);
+            
+            const query = params.get('q');
+            if (query) {
+                document.getElementById('searchInput').value = query;
+            }
+            
+            const authors = params.get('authors');
+            if (authors) {
+                authors.split('|||').forEach(a => filters.authors.add(a.trim()));
+            }
+            
+            const orgs = params.get('orgs');
+            if (orgs) {
+                orgs.split('|||').forEach(o => filters.organizations.add(o.trim()));
+            }
+            
+            const events = params.get('events');
+            if (events) {
+                events.split('|||').forEach(e => filters.events.add(e.trim()));
+            }
+            
+            const docTypes = params.get('docTypes');
+            if (docTypes) {
+                docTypes.split('|||').forEach(d => filters.docTypes.add(d.trim()));
+            }
+            
+            const years = params.get('years');
+            if (years) {
+                years.split('|||').forEach(y => filters.years.add(y.trim()));
+            }
+
+            if (params.get('edit') === '1') {
+                editMode = true;
+            }
+            }
+
+            function toggleFacet(facetId) {
+            const facetEl = document.getElementById(facetId);
+            const titleEl = facetEl.previousElementSibling;
+            const toggleEl = titleEl.querySelector('.facet-toggle');
+            
+            facetEl.classList.toggle('collapsed');
+            toggleEl.classList.toggle('collapsed');
+            }
+
+            document.getElementById('searchInput').addEventListener('input', () => {
+            renderResults();
+            loadFacets();
+            updateURL();
+        });
+        
+        window.addEventListener('filterChanged', updateURL);
+
+        // ===== Editor functions (active only when ?edit=1) =====
+
+        function applyEditMode() {
+            if (editMode) {
+                document.body.classList.add('edit-mode');
+                updateTabCounts();
+                switchEditTab('publications');
+            } else {
+                document.body.classList.remove('edit-mode');
+            }
+        }
+
+        function switchEditTab(tabName) {
+            currentEditTab = tabName;
+            document.querySelectorAll('.edit-tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.tab === tabName);
+            });
+            if (tabName === 'publications') {
+                document.body.classList.remove('edit-other');
+                renderResults();
+            } else {
+                document.body.classList.add('edit-other');
+                renderEditorTable(tabName);
+            }
+        }
+
+        function updateTabCounts() {
+            ['publications', 'persons', 'organizations', 'events', 'venues', 'locations'].forEach(t => {
+                const r = db.exec(`SELECT COUNT(*) FROM ${t}`);
+                const n = r[0]?.values[0]?.[0] ?? 0;
+                const el = document.getElementById('count-' + t);
+                if (el) el.textContent = `(${n})`;
+            });
+        }
+
+        function renderEditorTable(tableName) {
+            const panel = document.getElementById('editorTablePanel');
+            const result = db.exec(`SELECT * FROM ${tableName}`);
+            const rows = result[0]?.values || [];
+            const columns = result[0]?.columns || [];
+
+            const headers = {
+                persons: ['Name', 'Organization'],
+                organizations: ['Name', 'Location'],
+                events: ['Name', 'Venue', 'Start Date', 'End Date'],
+                venues: ['Name', 'Location'],
+                locations: ['City', 'State', 'Country', 'Continent']
+            }[tableName] || [];
+
+            const displayCellsFor = (obj) => {
+                if (tableName === 'persons') return [obj.name, getOrgName(obj.organization_id)];
+                if (tableName === 'organizations') return [obj.name, getLocationDisplay(obj.location_id)];
+                if (tableName === 'events') return [obj.name, getVenueName(obj.venue_id), obj.start_date, obj.end_date];
+                if (tableName === 'venues') return [obj.name, getLocationDisplay(obj.location_id)];
+                if (tableName === 'locations') return [obj.city, obj.state, obj.country, getContinentName(obj.continent_id)];
+                return [obj.name];
+            };
+
+            let html = `<h2 style="margin-bottom:12px;">${tableName.charAt(0).toUpperCase() + tableName.slice(1)}</h2>`;
+            html += '<table><thead><tr>';
+            headers.forEach(h => html += `<th>${h}</th>`);
+            html += '<th>Actions</th></tr></thead><tbody>';
+
+            rows.forEach(row => {
+                const obj = {};
+                columns.forEach((c, i) => obj[c] = row[i]);
+                const cells = displayCellsFor(obj);
+                html += '<tr>';
+                cells.forEach(c => html += `<td>${escapeHtml(c == null ? '-' : String(c))}</td>`);
+                const related = getRelatedItems(tableName, obj.id);
+                html += `<td><div class="row-actions">
+                    <button class="btn btn-secondary btn-small" onclick="openEditModal('${tableName}', ${obj.id})">Edit</button>
+                    ${related.length > 0
+                        ? `<span class="pub-related-badge">${related.length} related</span>`
+                        : `<button class="btn btn-danger btn-small" onclick="deleteRecord('${tableName}', ${obj.id})">Delete</button>`}
+                </div></td>`;
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            panel.innerHTML = html;
+        }
+
+        function getOrgName(id) {
+            if (!id) return '-';
+            return db.exec('SELECT name FROM organizations WHERE id = ?', [id])[0]?.values[0]?.[0] || '-';
+        }
+        function getVenueName(id) {
+            if (!id) return '-';
+            return db.exec('SELECT name FROM venues WHERE id = ?', [id])[0]?.values[0]?.[0] || '-';
+        }
+        function getContinentName(id) {
+            if (!id) return '-';
+            return db.exec('SELECT name FROM continents WHERE id = ?', [id])[0]?.values[0]?.[0] || '-';
+        }
+        function getLocationDisplay(id) {
+            if (!id) return '-';
+            const row = db.exec('SELECT city, state, country FROM locations WHERE id = ?', [id])[0]?.values[0];
+            if (!row) return '-';
+            let s = row[0];
+            if (row[1]) s += `, ${row[1]}`;
+            if (row[2]) s += `, ${row[2]}`;
+            return s;
+        }
+
+        function getRelatedItems(tableName, id) {
+            const items = [];
+            const tabOrder = ['publications', 'persons', 'organizations', 'events', 'venues', 'locations'];
+            const pos = tabOrder.indexOf(tableName);
+            if (pos <= 0) return items;
+
+            if (tableName === 'persons') {
+                const pubs = db.exec(`SELECT p.title FROM persons_publications pp JOIN publications p ON pp.publication_id = p.id WHERE pp.person_id = ?`, [id])[0]?.values || [];
+                pubs.forEach(r => items.push(`${r[0]}`));
+            } else if (tableName === 'organizations') {
+                const pubs = db.exec(`SELECT DISTINCT p.title FROM publications p JOIN persons_publications pp ON p.id = pp.publication_id JOIN persons per ON pp.person_id = per.id WHERE per.organization_id = ?`, [id])[0]?.values || [];
+                pubs.forEach(r => items.push(`${r[0]}`));
+                const persons = db.exec(`SELECT name FROM persons WHERE organization_id = ?`, [id])[0]?.values || [];
+                persons.forEach(r => items.push(`${r[0]}`));
+            } else if (tableName === 'events') {
+                const pubs = db.exec(`SELECT p.title FROM events_publications ep JOIN publications p ON ep.publication_id = p.id WHERE ep.event_id = ?`, [id])[0]?.values || [];
+                pubs.forEach(r => items.push(`${r[0]}`));
+            } else if (tableName === 'venues') {
+                const pubs = db.exec(`SELECT DISTINCT p.title FROM publications p JOIN events_publications ep ON p.id = ep.publication_id JOIN events e ON ep.event_id = e.id WHERE e.venue_id = ?`, [id])[0]?.values || [];
+                pubs.forEach(r => items.push(`${r[0]}`));
+                const events = db.exec(`SELECT name FROM events WHERE venue_id = ?`, [id])[0]?.values || [];
+                events.forEach(r => items.push(`${r[0]}`));
+            } else if (tableName === 'locations') {
+                const pubs = db.exec(`SELECT DISTINCT p.title FROM publications p JOIN persons_publications pp ON p.id = pp.publication_id JOIN persons per ON pp.person_id = per.id JOIN organizations o ON per.organization_id = o.id WHERE o.location_id = ?`, [id])[0]?.values || [];
+                pubs.forEach(r => items.push(`${r[0]}`));
+                const orgs = db.exec(`SELECT name FROM organizations WHERE location_id = ?`, [id])[0]?.values || [];
+                orgs.forEach(r => items.push(`${r[0]}`));
+                const venues = db.exec(`SELECT name FROM venues WHERE location_id = ?`, [id])[0]?.values || [];
+                venues.forEach(r => items.push(`${r[0]}`));
+            }
+            return items;
+        }
+
+        function openAddModal(tableName) {
+            currentTable = tableName;
+            editingId = null;
+            tableNameSingle = tableName.replace(/s$/, "");
+            document.getElementById('modalTitle').textContent = `Add ${tableNameSingle}`;
+            buildForm(tableSchemas[tableName]);
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function openEditModal(tableName, id) {
+            currentTable = tableName;
+            editingId = id;
+            tableNameSingle = tableName.replace(/s$/, "");
+            document.getElementById('modalTitle').textContent = `Edit ${tableNameSingle}`;
+            const result = db.exec(`SELECT * FROM ${tableName} WHERE id = ?`, [id]);
+            const row = result[0].values[0];
+            const columns = result[0].columns;
+            const data = {};
+            columns.forEach((col, i) => data[col] = row[i]);
+            buildForm(tableSchemas[tableName], data);
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function buildForm(schema, data = {}) {
+            const form = document.getElementById('editForm');
+            form.innerHTML = '';
+            form.dataset.table = currentTable;
+
+            if (editingId) {
+                const related = getRelatedItems(currentTable, editingId);
+                if (related.length > 0) {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'grid-column: 1 / -1; background: #f0f0f0; padding: 12px; border-radius: 4px; border-left: 4px solid #18bc9c;';
+                    div.innerHTML = `<div style="font-weight:600; margin-bottom:8px;">Related Items:</div>
+                        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                            ${related.map(r => `<span style="background:#18bc9c; color:white; padding:5px 10px; border-radius:3px; font-size:0.85em;">${escapeHtml(r)}</span>`).join('')}
+                        </div>`;
+                    form.appendChild(div);
+                }
+            }
+
+            schema.forEach(field => {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+                group.dataset.field = field.field;
+
+                const label = document.createElement('label');
+                label.textContent = field.label;
+                group.appendChild(label);
+
+                let input;
+                if (field.type === 'textarea') {
+                    input = document.createElement('textarea');
+                } else if (field.type === 'select') {
+                    input = document.createElement('select');
+                    let options = '<option value="">-- Select --</option>';
+                    if (field.sourceTable) {
+                        const r = db.exec(`SELECT id, ${field.sourceField} FROM ${field.sourceTable} ORDER BY ${field.sourceField}`);
+                        const vals = r[0]?.values || [];
+                        options += vals.map(row => `<option value="${row[0]}">${row[1]}</option>`).join('');
+                    }
+                    input.innerHTML = options;
+                } else if (field.type === 'multiselect') {
+                    const container = document.createElement('div');
+                    const ai = document.createElement('input');
+                    ai.type = 'text';
+                    ai.placeholder = `Search ${field.displayField}...`;
+                    ai.dataset.fieldName = field.field;
+                    ai.dataset.table = field.table;
+                    ai.dataset.displayField = field.displayField;
+                    ai.addEventListener('input', handleAutocomplete);
+                    container.appendChild(ai);
+                    const list = document.createElement('div');
+                    list.id = `selected-${field.field}`;
+                    list.style.marginTop = '10px';
+                    list.dataset.selectedAuthors = JSON.stringify([]);
+                    if (data.id && editingId) {
+                        const r = db.exec(`SELECT pp.person_id, p.name FROM persons_publications pp JOIN persons p ON pp.person_id = p.id WHERE pp.publication_id = ? ORDER BY pp.position`, [data.id]);
+                        if (r[0]) {
+                            const authors = r[0].values.map(row => ({ id: row[0], name: row[1] }));
+                            list.dataset.selectedAuthors = JSON.stringify(authors);
+                            renderSelectedAuthors(list);
+                        }
+                    }
+                    container.appendChild(list);
+                    group.appendChild(container);
+                    form.appendChild(group);
+                    return;
+                } else if (field.type === 'instantiations') {
+                    const container = document.createElement('div');
+                    const addBtn = document.createElement('button');
+                    addBtn.type = 'button';
+                    addBtn.className = 'btn btn-success btn-small';
+                    addBtn.textContent = '+ Add Instantiation';
+                    addBtn.onclick = () => addInstantiation();
+                    container.appendChild(addBtn);
+                    const list = document.createElement('div');
+                    list.id = 'instantiations-list';
+                    list.style.marginTop = '12px';
+                    list.dataset.instantiations = JSON.stringify([]);
+                    if (data.id && editingId) {
+                        const r = db.exec(`SELECT i.document_type_id, d.name, i.url, i.doi FROM instantiations i LEFT JOIN document_types d ON i.document_type_id = d.id WHERE i.publication_id = ?`, [data.id]);
+                        if (r[0]) {
+                            const insts = r[0].values.map(row => ({ typeId: row[0], typeName: row[1], url: row[2], doi: row[3] }));
+                            list.dataset.instantiations = JSON.stringify(insts);
+                            renderInstantiations(list);
+                        }
+                    }
+                    container.appendChild(list);
+                    group.appendChild(container);
+                    form.appendChild(group);
+                    return;
+                } else if (field.type === 'autocomplete') {
+                    input = document.createElement('input');
+                    input.type = 'text';
+                    input.dataset.fieldName = field.field;
+                    input.dataset.table = field.table;
+                    input.dataset.displayField = field.displayField;
+                    input.addEventListener('input', handleAutocomplete);
+                } else {
+                    input = document.createElement('input');
+                    input.type = field.type;
+                }
+
+                input.name = field.field;
+                input.value = data[field.field] || '';
+                group.appendChild(input);
+                form.appendChild(group);
+
+                if (field.type === 'select' && data[field.field]) {
+                    input.value = data[field.field];
+                } else if (field.type === 'autocomplete') {
+                    if (field.field === 'event' && data.id && editingId) {
+                        const er = db.exec(`SELECT ep.event_id, e.name FROM events_publications ep JOIN events e ON ep.event_id = e.id WHERE ep.publication_id = ? LIMIT 1`, [data.id]);
+                        if (er[0] && er[0].values.length) {
+                            const [eid, ename] = er[0].values[0];
+                            input.value = ename;
+                            input.dataset.selectedId = eid;
+                        }
+                    } else if (data[field.field]) {
+                        let dv = '';
+                        if (field.table === 'locations') {
+                            dv = getLocationDisplay(data[field.field]);
+                        } else {
+                            const r = db.exec(`SELECT ${field.displayField} FROM ${field.table} WHERE id = ?`, [data[field.field]]);
+                            dv = r[0]?.values[0]?.[0] || '';
+                        }
+                        input.value = dv;
+                        input.dataset.selectedId = data[field.field];
+                    }
+                }
+            });
+        }
+
+        function renderSelectedAuthors(container) {
+            const authors = JSON.parse(container.dataset.selectedAuthors || '[]');
+            container.innerHTML = authors.map((a, idx) => {
+                let txt = a.name;
+                if (a.id) {
+                    const o = db.exec(`SELECT o.name FROM persons p LEFT JOIN organizations o ON p.organization_id = o.id WHERE p.id = ?`, [a.id]);
+                    const on = o[0]?.values[0]?.[0];
+                    if (on) txt += `, ${on}`;
+                }
+                return `<div style="display:flex; align-items:center; text-align: left; background:#18bc9c; color:white; padding:6px 10px; margin:3px 0; border-radius:3px;">
+                    <span style="font-weight:bold; margin-right:8px;">${idx + 1}.</span>
+                    <span style="flex:1;">${escapeHtml(txt)}</span>
+                    ${idx > 0 ? `<button onclick="moveAuthor('${container.id}', ${idx}, -1)" style="background:none; border:none; color:white; cursor:pointer; padding:0 4px; font-size:1.1em;">↑</button>` : ''}
+                    ${idx < authors.length - 1 ? `<button onclick="moveAuthor('${container.id}', ${idx}, 1)" style="background:none; border:none; color:white; cursor:pointer; padding:0 4px; font-size:1.1em;">↓</button>` : ''}
+                    <button onclick="removeAuthor('${container.id}', ${idx})" style="background:none; border:none; color:white; cursor:pointer; padding:0 6px; font-weight:bold;">×</button>
+                </div>`;
+            }).join('');
+        }
+
+        function moveAuthor(cid, idx, dir) {
+            const c = document.getElementById(cid);
+            const a = JSON.parse(c.dataset.selectedAuthors || '[]');
+            const ni = idx + dir;
+            if (ni >= 0 && ni < a.length) {
+                [a[idx], a[ni]] = [a[ni], a[idx]];
+                c.dataset.selectedAuthors = JSON.stringify(a);
+                renderSelectedAuthors(c);
+            }
+        }
+        function removeAuthor(cid, idx) {
+            const c = document.getElementById(cid);
+            const a = JSON.parse(c.dataset.selectedAuthors || '[]');
+            a.splice(idx, 1);
+            c.dataset.selectedAuthors = JSON.stringify(a);
+            renderSelectedAuthors(c);
+        }
+
+        function addInstantiation() {
+            const list = document.getElementById('instantiations-list');
+            const insts = JSON.parse(list.dataset.instantiations || '[]');
+            insts.push({ typeId: null, typeName: '', url: '', doi: '' });
+            list.dataset.instantiations = JSON.stringify(insts);
+            renderInstantiations(list);
+        }
+        function renderInstantiations(container) {
+            const insts = JSON.parse(container.dataset.instantiations || '[]');
+            container.innerHTML = insts.map((inst, idx) => {
+                const types = db.exec(`SELECT id, name FROM document_types ORDER BY name`)[0]?.values || [];
+                return `<div class="instantiation-item">
+                    <select onchange="updateInstantiation(${idx}, 'typeId', this.value)">
+                        <option value="">-- Select Type --</option>
+                        ${types.map(([id, n]) => `<option value="${id}" ${inst.typeId == id ? 'selected' : ''}>${n}</option>`).join('')}
+                    </select>
+                    <input type="text" placeholder="URL" value="${escapeHtml(inst.url || '')}" onchange="updateInstantiation(${idx}, 'url', this.value)">
+                    <input type="text" placeholder="DOI" value="${escapeHtml(inst.doi || '')}" onchange="updateInstantiation(${idx}, 'doi', this.value)">
+                    <button onclick="removeInstantiation(${idx})" class="btn btn-danger btn-small" type="button">Remove</button>
+                </div>`;
+            }).join('');
+        }
+        function updateInstantiation(idx, f, v) {
+            const list = document.getElementById('instantiations-list');
+            const insts = JSON.parse(list.dataset.instantiations || '[]');
+            if (f === 'typeId') {
+                insts[idx].typeId = v ? parseInt(v) : null;
+                const t = db.exec(`SELECT name FROM document_types WHERE id = ?`, [v])[0]?.values[0];
+                insts[idx].typeName = t ? t[0] : '';
+            } else {
+                insts[idx][f] = v;
+            }
+            list.dataset.instantiations = JSON.stringify(insts);
+        }
+        function removeInstantiation(idx) {
+            const list = document.getElementById('instantiations-list');
+            const insts = JSON.parse(list.dataset.instantiations || '[]');
+            insts.splice(idx, 1);
+            list.dataset.instantiations = JSON.stringify(insts);
+            renderInstantiations(list);
+        }
+
+        function handleAutocomplete(e) {
+            const input = e.target;
+            const query = input.value.toLowerCase();
+            const table = input.dataset.table;
+            const displayField = input.dataset.displayField;
+            const fieldName = input.dataset.fieldName || input.name;
+            if (query.length < 1) {
+                const l = document.getElementById('autocompleteList-' + fieldName);
+                if (l) l.remove();
+                return;
+            }
+            let suggestions = [];
+            if (table === 'persons') {
+                suggestions = db.exec(`SELECT p.id, p.name, o.name FROM persons p LEFT JOIN organizations o ON p.organization_id = o.id WHERE p.name LIKE ? LIMIT 5`, [`%${query}%`])[0]?.values || [];
+            } else if (table === 'locations') {
+                suggestions = db.exec(`SELECT id, city, state, country FROM locations WHERE city LIKE ? OR country LIKE ? LIMIT 5`, [`%${query}%`, `%${query}%`])[0]?.values || [];
+            } else {
+                suggestions = db.exec(`SELECT id, ${displayField} FROM ${table} WHERE ${displayField} LIKE ? LIMIT 5`, [`%${query}%`])[0]?.values || [];
+            }
+            const listId = 'autocompleteList-' + fieldName;
+            const list = document.getElementById(listId) || document.createElement('div');
+            list.id = listId;
+            list.className = 'autocomplete-list';
+            let html = suggestions.map(row => {
+                const id = row[0];
+                const name = row[1];
+                let dt = name;
+                if (table === 'persons' && row[2]) dt += `, ${row[2]}`;
+                else if (table === 'locations') {
+                    if (row[2] && row[3]) dt += `, ${row[2]}, ${row[3]}`;
+                    else if (row[3]) dt += `, ${row[3]}`;
+                }
+                return `<div class="autocomplete-item" onclick="selectAutocomplete('${fieldName}', ${id}, '${String(name).replace(/'/g, "\\'")}')">${escapeHtml(dt)}</div>`;
+            }).join('');
+            if (['organizations', 'locations', 'venues', 'events', 'persons'].includes(table)) {
+                html += `<div class="autocomplete-item" style="background:#f0f0f0; font-weight:600; color:#18bc9c;" onclick="createNewRecord('${fieldName}', '${table}', '${displayField}', '${input.value.replace(/'/g, "\\'")}')">+ Create: ${escapeHtml(input.value)}</div>`;
+            }
+            list.innerHTML = html;
+            input.parentElement.style.position = 'relative';
+            input.parentElement.appendChild(list);
+        }
+
+        function selectAutocomplete(fieldName, id, name) {
+            const input = document.querySelector(`input[data-field-name="${fieldName}"]`);
+            if (input && input.dataset.table === 'persons') {
+                const c = document.getElementById(`selected-${fieldName}`);
+                if (c) {
+                    const a = JSON.parse(c.dataset.selectedAuthors || '[]');
+                    if (!a.find(x => x.id === id)) {
+                        a.push({ id, name });
+                        c.dataset.selectedAuthors = JSON.stringify(a);
+                        renderSelectedAuthors(c);
+                    }
+                    input.value = '';
+                }
+            } else {
+                const elem = document.querySelector(`input[name="${fieldName}"]`) || input;
+                if (elem) {
+                    let dv = name;
+                    if (input && input.dataset.table === 'locations') dv = getLocationDisplay(id);
+                    elem.value = dv;
+                    elem.dataset.selectedId = id;
+                }
+            }
+            const list = document.getElementById('autocompleteList-' + fieldName);
+            if (list) list.remove();
+        }
+
+        function createNewRecord(fieldName, table, displayField, value) {
+            try {
+                if (table === 'locations') {
+                    db.run(`INSERT INTO ${table} (city, country) VALUES (?, ?)`, [value, 'Unknown']);
+                } else {
+                    db.run(`INSERT INTO ${table} (name) VALUES (?)`, [value]);
+                }
+                const id = db.exec(`SELECT last_insert_rowid()`)[0]?.values[0]?.[0];
+                selectAutocomplete(fieldName, id, value);
+                updateTabCounts();
+            } catch (e) {
+                alert('Error creating record: ' + e.message);
+            }
+        }
+
+        function saveRecord() {
+            const formData = new FormData(document.getElementById('editForm'));
+            const data = Object.fromEntries(formData);
+            const selectedAuthors = [];
+            let selectedEventId = null;
+
+            if (currentTable === 'events' && data.start_date && data.end_date) {
+                if (new Date(data.end_date) < new Date(data.start_date)) {
+                    alert('End date cannot be before start date');
+                    return;
+                }
+            }
+
+            document.querySelectorAll('input[data-field-name]').forEach(input => {
+                const fn = input.dataset.fieldName;
+                if (fn === 'authors') {
+                    // handled below
+                } else if (fn === 'event') {
+                    selectedEventId = input.dataset.selectedId || null;
+                    delete data.event;
+                } else {
+                    data[fn] = input.dataset.selectedId || data[fn] || null;
+                }
+            });
+
+            const sc = document.getElementById('selected-authors');
+            if (sc) {
+                selectedAuthors.push(...JSON.parse(sc.dataset.selectedAuthors || '[]'));
+                delete data.authors;
+            }
+
+            let instantiations = [];
+            const il = document.getElementById('instantiations-list');
+            if (il) {
+                instantiations = JSON.parse(il.dataset.instantiations || '[]');
+                delete data.instantiations;
+            }
+
+            // Normalize empty strings to NULL for all fields. NOT NULL columns
+            // (e.g. title, city, country, name) will surface a real validation
+            // error instead of silently storing ''.
+            Object.keys(data).forEach(k => {
+                if (data[k] === '' || data[k] === undefined) data[k] = null;
+            });
+
+            try {
+                if (editingId) {
+                    const sets = Object.keys(data).map(k => `${k} = ?`).join(', ');
+                    const vals = Object.values(data);
+                    vals.push(editingId);
+                    db.run(`UPDATE ${currentTable} SET ${sets} WHERE id = ?`, vals);
+                    if (currentTable === 'publications') {
+                        db.run(`DELETE FROM persons_publications WHERE publication_id = ?`, [editingId]);
+                        selectedAuthors.forEach((a, i) => db.run(`INSERT INTO persons_publications (person_id, publication_id, position) VALUES (?, ?, ?)`, [a.id, editingId, i + 1]));
+                        db.run(`DELETE FROM events_publications WHERE publication_id = ?`, [editingId]);
+                        if (selectedEventId) db.run(`INSERT INTO events_publications (event_id, publication_id, position) VALUES (?, ?, ?)`, [selectedEventId, editingId, 1]);
+                        db.run(`DELETE FROM instantiations WHERE publication_id = ?`, [editingId]);
+                        instantiations.forEach(inst => {
+                            if (inst.typeId) db.run(`INSERT INTO instantiations (publication_id, document_type_id, url, doi) VALUES (?, ?, ?, ?)`, [editingId, inst.typeId, inst.url || null, inst.doi || null]);
+                        });
+                    }
+                } else {
+                    const fields = Object.keys(data).join(', ');
+                    const placeholders = Object.keys(data).map(() => '?').join(', ');
+                    db.run(`INSERT INTO ${currentTable} (${fields}) VALUES (${placeholders})`, Object.values(data));
+                    if (currentTable === 'publications') {
+                        const pid = db.exec(`SELECT last_insert_rowid()`)[0]?.values[0]?.[0];
+                        selectedAuthors.forEach((a, i) => db.run(`INSERT INTO persons_publications (person_id, publication_id, position) VALUES (?, ?, ?)`, [a.id, pid, i + 1]));
+                        if (selectedEventId) db.run(`INSERT INTO events_publications (event_id, publication_id, position) VALUES (?, ?, ?)`, [selectedEventId, pid, 1]);
+                        instantiations.forEach(inst => {
+                            if (inst.typeId) db.run(`INSERT INTO instantiations (publication_id, document_type_id, url, doi) VALUES (?, ?, ?, ?)`, [pid, inst.typeId, inst.url || null, inst.doi || null]);
+                        });
+                    }
+                }
+                closeModal();
+                updateTabCounts();
+                if (currentEditTab === 'publications') {
+                    renderResults();
+                    loadFacets();
+                } else {
+                    renderEditorTable(currentEditTab);
+                }
+                showSuccess(`Record ${editingId ? 'updated' : 'created'} successfully!`);
+            } catch (e) {
+                alert('Error saving record: ' + e.message);
+            }
+        }
+
+        function deleteRecord(tableName, id) {
+            const related = getRelatedItems(tableName, id);
+            if (related.length > 0) {
+                alert(`Cannot delete: ${related.length} related item(s):\n\n${related.join('\n')}`);
+                return;
+            }
+            if (!confirm('Are you sure you want to delete this record?')) return;
+            try {
+                db.run(`DELETE FROM ${tableName} WHERE id = ?`, [id]);
+                updateTabCounts();
+                if (currentEditTab === 'publications') {
+                    renderResults();
+                    loadFacets();
+                } else {
+                    renderEditorTable(currentEditTab);
+                }
+                showSuccess('Record deleted successfully!');
+            } catch (e) {
+                alert('Error deleting record: ' + e.message);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+        function showSuccess(msg) {
+            const el = document.getElementById('successMessage');
+            el.textContent = msg;
+            el.classList.add('active');
+            setTimeout(() => el.classList.remove('active'), 3000);
+        }
+
+        function downloadDatabase() {
+            const sqlString = generateSqlDump();
+            const blob = new Blob([sqlString], { type: 'text/sql' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'publications.sql';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function generateSqlDump() {
+            let publications_count = 0;
+            let out = 'PRAGMA foreign_keys=OFF;\nBEGIN TRANSACTION;\n';
+            const tables = db.exec("SELECT name, sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'");
+            if (tables.length === 0) return '-- Empty Database';
+            tables[0].values.forEach(([tableName, createSql]) => {
+                out += createSql + ';\n';
+                const c = db.exec(`SELECT * FROM "${tableName}"`);
+                if (c.length > 0) {
+                    c[0].values.forEach(row => {
+                        const fv = row.map(v => {
+                            if (v === null || v === '') return 'NULL';
+                            if (typeof v === 'string') {
+                                // escape single quotes
+                                v = `'${v.replace(/'/g, "''")}'`;
+                                // same as sqlite3 .dump (since v3.19 (2017))
+                                // substitute replace() function to handle line feed character (newline)
+                                if (v.includes('\n')) {
+                                    v = v.replace(/\n/g, '\\n');
+                                    v = `replace(${v},'\\n',char(10))`;
+                                }
+                                // substitute replace() function to handle carriage return character
+                                if (v.includes('\r')) {
+                                    v = v.replace(/\r/g, '\\r');
+                                    v = `replace(${v},'\\r',char(13))`;
+                                }
+                                return v;
+                            }
+                            return v;
+                        });
+                        out += `INSERT INTO ${tableName} VALUES(${fv.join(',')});\n`;
+                        if (tableName === 'publications') publications_count++;
+                    });
+                }
+            });
+            out += 'DELETE FROM sqlite_sequence;\n';
+            out += `INSERT INTO sqlite_sequence VALUES('publications',${publications_count});\n`;
+            out += 'COMMIT;\n';
+            return out;
+        }
+
+        window.onclick = function(event) {
+            const m = document.getElementById('editModal');
+            if (event.target === m) closeModal();
+        };
+
+        initDB().then(() => {
+            loadFromURL();
+            renderResults();
+            loadFacets();
+            applyEditMode();
+        });
+    </script>
+
+</section>
+</body>
+</html>
