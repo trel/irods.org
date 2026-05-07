@@ -93,7 +93,6 @@
                 On Thursday, July 2, the iRODS Consortium will host an iRODS Troubleshooting session where participants can get some one-on-one help with an existing or planned iRODS installation or integration.
                 <br><br>
             </div>
-            <div class="space_half"></div>
 
             <div class="space_half"></div>
             <div class="col-lg-offset-2 col-lg-8">
@@ -124,6 +123,7 @@
                     </ul>
                 </ul>
             </div>
+
             <div class="space_half"></div>
             <div class="col-lg-offset-2 col-lg-8">
                 <h4 class="light_font">Virtual Pricing</h4>
@@ -137,6 +137,9 @@
                         <li>Start Date: Tuesday, June 30</li>
                         <li>End Date: Wednesday, July 1</li>
                     </ul>
+                </ul>
+            </div>
+
             <div class="space_half"></div>
             <div class="col-lg-offset-2 col-lg-8" >
                 <h4 class="light_font">Key Dates</h4>
@@ -154,8 +157,223 @@
                     </ul>
                 </ul>
             </div>
-            <div class="space phone_hide"></div>
 
+            <div class="space_half"></div>
+            <div class="col-lg-offset-2 col-lg-8" >
+                <h4 class="light_font" id="talks">Accepted Talks</h4>
+                <hr class="small_centered_line_ugm">
+            </div>
+
+            <div class="col-lg-offset-1 col-lg-10 col-md-offset-2 col-md-8 col-sm-offset-1 col-sm-10 col-xs-offset-0 col-xs-12 text-left" >
+
+<!--
+                <p><a href="{static}/images/irods_ugm2026_agenda.pdf">Current Agenda (pdf)</a></p>
+-->
+                <br/>
+
+                <b>iRODS UGM 2026 Keynote</b><br/>
+                Centre for Genomic Regulation (CRG)<br/>
+                <div class="space_half"></div>
+
+                <b>iron: a Go-based iRODS client and library, and a bridge between iRODS and the ownCloud desktop client</b><br/>
+                Peter Verraedt<br/>
+                KU Leuven<br/>
+                <div class="abstract">
+                    Managing research data at scale requires both a robust storage backend and clients that researchers can actually use. At KU Leuven ICTS, we developed iron — a pure-Go library and command-line client that implements the iRODS protocol, portable and suited for data transfers both on HPC clusters and on the desktop. With built-in support for OIDC-based PAM authentication and tab completion, users can access or modify their data in no time.
+                    <br/><br/>
+                    In this talk we present the design and implementation of iron, both as a Go library and as a command-line client. We then show how iron serves as the foundation for a storage provider plugin for Reva — the CS3 APIs reference implementation developed at CERN — enabling iRODS to be exposed as a first-class storage backend to ownCloud desktop clients. This integration allows researchers to interact with their iRODS collections through the familiar ownCloud sync client, without any awareness of the underlying data management layer.
+                    <br/><br/>
+                    We close with an overview of the deployment of this stack in the VSC Tier-1 Data Service/KU Leuven ManGO Service and an outlook on future work.
+                </div>
+                <div class="space_half"></div>
+
+                <b>Deploying a FAIR-Compliant Research Data Management System with iRODS at the Luxembourg Centre for Systems Biomedicine, University of Luxembourg</b><br/>
+                Sandesh Patil<br/>
+                Luxembourg Centre for Systems Biomedicine (LCSB)<br/>
+                <div class="abstract">
+                    Researchers at the Luxembourg Centre for Systems Biomedicine generate large volumes of heterogeneous scientific data across multiple projects and computational environments. To support secure storage, structured organization, and long-term stewardship of this data, we are developing a Research Data Management System (RDMS) built around iRODS.
+                    <br/><br/>
+                    The current deployment uses iRODS v5.0.1 with Dell EMC Isilon as the primary backend storage vault, providing scalable storage for large research datasets.
+                    <br/><br/>
+                    Researchers interact with the platform through multiple interfaces. The Mango-portal provides a web-based interface for browsing collections, managing metadata, and sharing datasets. In addition, we developed lcsb-icommands, a command-line wrapper around iRODS icommands that simplifies dataset ingestion and automated interaction with the iRODS environment.
+                    <br/><br/>
+                    Authentication and identity management are handled through Keycloak using OpenID Connect, enabling centralized authentication and single sign-on across the RDMS platform. Platform services interact with iRODS through the iRODS HTTP API, which supports automated workflows such as user provisioning, collection management, and dataset ingestion.
+                    <br/><br/>
+                    The RDMS platform integrates with institutional metadata registries and data submission systems to automate the creation of project and dataset collections in iRODS. Descriptive metadata are stored as iRODS AVU attributes capturing information such as data type, classification, ownership, and legal provenance.
+                    <br/><br/>
+                    We are also developing an AI-powered chatbot assistant for integration into the Mango-portal. Based on large language models with retrieval-augmented generation over platform documentation, the assistant helps researchers navigate the system and understand available workflows. The chatbot operates with live iRODS session context on each interaction; it queries the user's active session to retrieve real-time ACL permissions, allowing it to tailor responses based on which projects the user can read or write to.
+                    <br/><br/>
+                    In this talk, we present the architecture of the RDMS platform and its integration with other components of the institutional research environment. We highlight integration with Keycloak-based identity management, project-based data organization, and ingestion workflows designed to capture datasets early in their lifecycle from sources such as external submissions, institutional platforms, and internally generated datasets.
+                </div>
+                <div class="space_half"></div>
+
+                <b>iBridges Dataverse: A Client‑Side Bridge Between iRODS and Dataverse for Research Data Publication</b><br/>
+                Christine Staiger<br/>
+                Utrecht University<br/>
+                <div class="abstract">
+                    Publishing curated research data from iRODS into external repositories often requires manual, error‑prone steps. iBridges Dataverse introduces a lightweight, client‑side integration that enables researchers to create Dataverse datasets and upload selected iRODS data objects directly from the iBridges CLI or GUI. Importantly, this plugin does not implement a server‑to‑server transfer mechanism; all operations occur on the client, where files are temporarily downloaded from iRODS and subsequently uploaded to Dataverse. This design avoids changes to iRODS servers or Dataverse backends while providing a practical workflow for end users.
+                    <br/><br/>
+                    The plugin supports a Git‑like staging model in which users browse iRODS collections, mark data objects for upload, and later push all staged objects to a Dataverse dataset. Both CLI and GUI share the same local state, enabling seamless switching between interfaces. Additional features include checksum verification, multi‑Dataverse configuration management, and interactive or JSON‑based metadata creation for Dataverse datasets. File transfers currently support objects up to 9 GB, consistent with Dataverse’s API constraints.
+                    <br/><br/>
+                    By embedding Dataverse publication capabilities directly into iBridges without requiring any server‑side extensions, this plugin offers a reproducible, scriptable, and user‑friendly workflow from active data management to dataset publication. It strengthens interoperability between two widely used components of the research data ecosystem while keeping deployment overhead minimal.
+                </div>
+                <div class="space_half"></div>
+
+                <b>Orchestrating Granular Access for Sensitive Omics Data: The SAFES Architecture within NCHC's Trusted Cloud Platform</b><br/>
+                Chang-Wei Yeh, Chien-He Peng, Yu-Tai Wang<br/>
+                National Center for High-performance Computing, National Institutes of Applied Research (NCHC)<br/>
+                <div class="abstract">
+                    The National Center for High-performance Computing (NCHC), an institute within the National Institutes of Applied Research (NIAR), serves as Taiwan’s primary infrastructure for large-scale scientific computation. The proliferation of high-throughput "Omics" data—spanning genomics, proteomics, and spatial omics—has necessitated a shift toward more sophisticated data management strategies. Standard access protocols are often insufficient for sensitive datasets governed by Institutional Review Board (IRB) requirements, which frequently demand granular, subset-level authorization and strict containment within a Trusted Research Environment (TRE).
+                    <br/><br/>
+                    To meet these security and operational demands, NCHC implemented the Trusted Cloud Platform, which hosts the Sensitive-data Access, File-Exchange System (SAFES). This framework decouples data management into SAFES-Core (authorization logic) and SAFES-Gate (exchange mechanics). At the technical core of SAFES-Core is iRODS, utilized for its robust Data Virtualization and Secure Collaboration capabilities. By abstracting physical storage into logical, project-aligned structures, the system facilitates fine-grained access control. Authorized datasets are exposed to researchers via authenticated network file system mounts, ensuring compliance while maintaining analytical performance. This presentation details the architectural design of the Trusted Cloud Platform and SAFES, highlighting the role of iRODS in securing and managing Taiwan’s sensitive research data.
+                </div>
+                <div class="space_half"></div>
+
+                <b>iRODS as back-end in a data transfer and exchange application</b><br/>
+                Claudio Cacciari<br/>
+                SURF<br/>
+                <div class="abstract">
+                    The interoperability between different data services is a constant challenge for the data providers, hosting the data, and for the users. In fact, there is a growing number of workflows that need to access data on different systems and often the data providers are asked to add an interoperability layer to their tools. This increases the cost of maintenance to operate the services, but also the cost to develop new features because the developers will need to support the existing protocols and APIs. And when the data providers cannot provide such interoperability, then the user needs to face the problem of connecting to the different systems. Typically it means to configure a different client for each system, knowing its technical details and its protocols, which is quite difficult for most of the users, and to operate it manually, with little automation.
+                    <br/><br/>
+                    iRODS is an answer to this challenge, providing an abstraction layer on top of different storage systems. We want to give an answer to an even higher level, developing an application, called Neptune, that connects iRODS itself to other data services in a seamless way. The project updated an existing fsspec (https://github.com/fsspec/filesystem_spec) plugin for iRODS and uses it to abstract iRODS as a posix file system.
+                </div>
+                <div class="space_half"></div>
+
+                <b>iRODS Data Repository Service Implementation</b><br/>
+                Mike Conway, Deep Patel<br/>
+                NIEHS / NIH<br/>
+                <div class="abstract">
+                    We will demonstrate the iRODS GA4GH Data Repository Service implementation, irods-go-drs, which implements the 1.5 DRS Specification.
+                    <br/><br/>
+                    This implementation surfaces iRODS data to standard GA4GH workflows (in languages such as WDL, CWL, and NextFlow) and allows integration with common standards in Genomics and Health.
+                </div>
+                <div class="space_half"></div>
+
+                <b>Who, What, Where, When: Auditing of Yoda/iRODS instances</b><br/>
+                Maryam Soleimani Dodaran, Rene Wiermer<br/>
+                SURF<br/>
+                <div class="abstract">
+                    Institutions using our iRODS and Yoda instances want to know how the services are actually used. There might be legal and operational requirements to be able to prove which account performed a change to the stored data.
+                    <br/><br/>
+                    We show our experience with trying a database-based approach to achieve this and how we finally chose our current setup with the iRODS audit plugin.
+                    <br/><br/>
+                    We show practical configuration tips and limitations. We then sketch out what we would like to change to make the setup more accurate and easier to manage.
+                </div>
+                <div class="space_half"></div>
+
+                <b>iRODS Monitoring for System Administration</b><br/>
+                Luca Le Preux, John Mc Farland, Gerben Strikwerda<br/>
+                University of Groningen<br/>
+                <div class="abstract">
+                    In this talk we present our experience in collecting meaningful operational metrics from an iRODS server to provide more confidence on the good operational state of the iRODS instance as well as enabling easier diagnostics in case of sudden issues. We will show how we are leveraging well established system admin tools like Prometheus, Grafana, and Nagios to monitor RUG iRODS instances.
+                    <br/><br/>
+                    A typical Grafana dashboard for iRODS focuses on data-management, aiming at attributing resource usage to users and groups. In contrast, our iRODS Prometheus exporter monitors the health-state of the system and its sub-processes. Our initial effort centered on collecting metrics to characterize some key aspects: the iRODS delayed rules queue (iqstat), active client connections (ips) and simple benchmarking metrics for database round requests (iquest, ils).
+                    <br/><br/>
+                    Finally we will showcase our iRODS Grafana dashboards and the alerts to exemplify how we are integrating iRODS metrics with system and hardware metrics to form a comprehensive view of our iRODS zones for system administration.
+                </div>
+                <div class="space_half"></div>
+
+                <b>Storage referential based on iRODS, to manage patient data in Gustave Roussy Comprehensive Cancer Center</b><br/>
+                Gérôme Jules-Clement, Marc Deloger, Alicia Tran-Dien, Melis Cardon, Hichem Larbi, Nolwenn Paris, Sarobidy Rapeteramana, Franck Le Layo, Julien Romejon, Philippe Hupé<br/>
+                Gustave Roussy, Institut Curie<br/>
+                <div class="abstract">
+                    Cancer care and clinical research produce large amounts of data when performing routine genomics profiling and digital histological slides. Clinical research projects involve several data providers over time and can use internal or external data producers. To harmonize and centralize data management, a storage referential has been deployed on-premise in Gustave Roussy comprehensive cancer center. Its goal is to re-use data for retrospective analysis and custom patient cohorts and foster scientific collaboration. The storage referential is made of two main components: (1) a dedicated data catalog to manage storage unit and its metadata standard description and (2) a file system based on iRODS.
+                    <br/><br/>
+                    Data catalog implements data lifecycle management, ensuring data access rights and traceability based on standardized metadata descriptions with controlled vocabulary.
+                    <br/><br/>
+                    iRODS file system metadata and user rights are not opened to the end user, they are inherited from data catalog.
+                    <br/><br/>
+                    Automated data management routines are designed to support data managers for the recurrent needs and implement the business rules tailored to each context, including decisions about which data format must be kept over time. Patient and sample numbers, described as metadata, are the key to reflect the data reality and add value to the storage referential.
+                    <br/><br/>
+                    As a result, storage referential has been in production for six years specializing in raw data storage, ensuring no file duplicates within the infrastructure and is daily used by computation specialists for both routine and retrospective analysis.
+                </div>
+                <div class="space_half"></div>
+
+                <b>iRODS Labels: A Proposal for a Complementary Labeling Mechanism in iRODS</b><br/>
+                Andrey Tsyganov<br/>
+                University of Groningen<br/>
+                <div class="abstract">
+                    iRODS is a well-known research data management system with a wide range of functionalities, including one of the most valuable components — its metadata engine, which allows scientists to associate data objects with descriptive attributes or tags. In iRODS, metadata are implemented as AVU (Attribute, Value, Unit) triples, with each instance attached to a single object. As a result, expressing relationships where one logical label or descriptor is shared across multiple objects requires duplicating metadata entries, rather than defining a single reusable entity linked to multiple objects.
+                    <br/><br/>
+                    This work proposes an approach that introduces labels — a complementary metadata construct that enables mapping a single label to multiple data objects. This mechanism coexists with the existing AVU-based metadata model and provides additional capabilities for data organization, cross-reference search, and metadata templating. This approach simplifies management of logically related data objects, reduces duplication of metadata key–value pairs, and improves consistency across large-scale collections.
+                    <br/><br/>
+                    The implementation includes an additional module in iCommands (ilabel) and requires minimal modifications to several components of the query processing subsystem to support label resolution within GenQuery and GenQuery2.
+                    <br/><br/>
+                    The system architecture and a proof-of-concept are presented, developed by building iRODS from source, extending the codebase with new components and database entities, and modifying the query processing layer. Parts of the implementation were assisted by an AI-based code generation tool.
+                </div>
+                <div class="space_half"></div>
+
+                <b>Intelligent iRODS and data management assistant: Chatbot Dizzy</b><br/>
+                Fardad Maghsoudi<br/>
+                Delft University of Technology<br/>
+                <div class="abstract">
+                    With increasing multi-institutional collaborations, the growing volume of generated and shared data, and the rising complexity of policies, security, privacy, and infrastructure requirements, staying up to date with data management has become a significant challenge. Recent advancements in chatbots have made them an integral part of daily workflows, assisting users in addressing data-related questions. However, most existing chatbots rely on general internet knowledge, and a dedicated, domain-specific assistant tailored to data management, particularly for iRODS and its ecosystem, is still lacking.
+                <br/><br/>
+                Dizzy, the intelligent iRODS data management chatbot developed at TU Delft, is a fully in-house, open-source tool designed to support users in navigating complex data management tasks. It is built on a European open-source Large Language Model, Ministral 3-3B, and leverages a retrieval-augmented generation (RAG) approach over curated institutional resources, including TU Delft data and software policies, the iRODS documentation, and information security and privacy guidelines. This architecture enables Dizzy to provide context-aware, institution-specific guidance, particularly for iRODS-related operations such as command usage, policy interpretation, and troubleshooting.
+                <br/><br/>
+                Unlike general-purpose chatbot solutions, Dizzy is hosted entirely on TU Delft infrastructure, behind institutional authentication, ensuring that no data leaves the university environment for any purpose, including training or feedback. This design addresses critical concerns around data sovereignty, privacy, and security. By combining domain-specific knowledge with a privacy-preserving deployment model, Dizzy represents a novel approach to integrating LLM-based assistants within regulated research data environments.
+                <br/><br/>
+                Dizzy supports FAIR and open science initiatives at TU Delft by facilitating efficient access to data management knowledge in a secure and controlled manner. It provides rapid, context-aware responses to user queries, reducing the time required to locate relevant policies, commands, and best practices, while still recognizing the importance of expert oversight. Additionally, its lightweight model and memory-efficient implementation contribute to the university’s sustainability goals.
+                <br/><br/>
+                At its current stage, Dizzy is actively used by data professionals within TU Delft, including data managers, data engineers, and data stewards. Initial user feedback indicates that it significantly improves efficiency in retrieving relevant information and assists in resolving complex iRODS-related queries that would otherwise require substantial manual effort.
+                </div>
+                <div class="space_half"></div>
+
+                <b>Lessons from the Deployment of a Production iRODS Auditing Module</b><br/>
+                Venustiano Soancatl Aguilar, Simona Stoica, Luca Le Preux, Ger Strikwerda, Harm Vos, John Mc Farland, Burcu Beygu Koopmans, Andrey Tsyganov<br/>
+                University of Groningen<br/>
+                <div class="abstract">
+                    Auditing in iRODS has historically targeted administrators and system-level traceability, but modern research data management increasingly demands user-facing transparency, enabling researchers to directly review actions performed on their own data. Realizing this user-oriented auditing introduces substantial challenges across event selection, system scalability, and usability.
+                    <br/><br/>
+                    In this presentation, we share our experiences evolving from the iRODS Audit ELK container to a robust, production-ready auditing stack within the Research Data Management System (RDMS) at the University of Groningen. We discuss technical choices and trade-offs, including filtering to minimize the ingestion of unnecessary documents and the implementation of Index Lifecycle Management (ILM) and Snapshot Lifecycle Management (SLM) for proactive storage capacity planning and data retention.
+                    <br/><br/>
+                    To underpin future growth, we use a capacity planning framework that employs compound annual growth rates (CAGR) and exponential models to project user base expansion and data volume increases. These projections critically inform our architectural decisions around Elasticsearch indexing capacity and retention policies.
+                    <br/><br/>
+                    Further, we outline the design of our graphical interface, which transforms iRODS events into clear user-accessible audit trails. For example, adding or removing metadata, as well as removing, moving, and renaming iRODS objects including both collections and files.
+                    <br/><br/>
+                    We conclude by discussing practical lessons learned from deployment, spotlighting current challenges, and sharing our plans for future improvements in user-centric auditing for the RDMS.
+                </div>
+                <div class="space_half"></div>
+
+                <b>Davrods: Past, Present and Future</b><br/>
+                Sirjan Kaur<br/>
+                Utrecht University<br/>
+                <div class="abstract">
+                    During the iRODS User Group Meeting 2016, Utrecht University introduced Davrods. Davrods is a WebDAV compliant interface initially developed for iRODS 4.1 for easier interaction with Yoda. Since its conception, Davrods has been implemented in a broad number of use cases besides Yoda. This presentation will highlight the existing architecture, changes in the past years, exploring dependencies, conquering challenges and looking into the future of Davrods.
+                </div>
+                <div class="space_half"></div>
+
+                <b>ManGO Platform updates (with a community focus)</b><br/>
+                Paul Borgermans, Mariana Montes, Joachim Bovin, Mustafa Dikmen, Danai Kafetzaki, Jef Scheepers, Ingrid Barcena Roig<br/>
+                KU Leuven<br/>
+                <div class="abstract">
+                    In this talk we will focus on new developments within the ManGO platform that are both aimed at improving the quality of life of its developers as well as enabling the larger iRODS community with re-use (of part) of it in other installations. The main work is the separation of "KU Leuven" specific parts, while properly packaging and publish the various logical parts and modules to the established repositories like Pypi. Functionality that we identified as useful for a broader adoption outside the ManGO platform are bundled in a dedicated package called ManGO Lib. Furthermore, the customisation options for other deployments are much improved, both in terms of flexibility and options for plugging in organisation specific functionalities/modules. Proper tests and documentation are equally part of the current efforts.
+                </div>
+                <div class="space_half"></div>
+
+                <b>Update on iRODS distributed data management in the LEXIS Platform</b><br/>
+                Martin Golasowski, Tobias Janca, Jan Martinovic<br/>
+                 IT4Innovations, VŠB – Technical University of Ostrava<br/>
+                <div class="abstract">
+                    Modern scientific and AI-driven computing increasingly demands secure, seamless access to complex workflows and heterogeneous data sources across distributed infrastructures. The LEXIS Platform addresses this challenge by delivering streamlined, secure access to intricate computing pipelines, powered by iRODS-based distributed data management. This talk presents recent advancements in the platform’s integration with the latest iRODS release, detailing architectural decisions and practical lessons learned from deploying the iRODS HTTP API in production environments. We will explore how LEXIS Platform orchestrates efficient, cross-repository data transfers within the EOSC CZ ecosystem and highlight its role in the EuroHPC Federation Platform. As a real-world showcase, we present the OpenWebSearch.eu project’s use-case of the LEXIS Platform and iRODS as a portable, scalable object store to distribute large-scale datasets in the LUMI AI Factory context.
+                </div>
+                <div class="space_half"></div>
+
+                <b>HPC research data management workflows</b><br/>
+                Mher Kazandjian<br/>
+                SURF<br/>
+                <div class="abstract">
+                    HPC workflows typically involve large datasets that are either used as input or generated as output. Users need to be aware of various storage tiers and manually move data across them throughout the life cycle of a typical HPC job. Moreover, these datasets must be made available on the compute side at high bandwidth to enable efficient processing and better use of compute cycles.
+                    <br/><br/>
+                    At SURF, the IT cooperative of Dutch education and research, we have developed a layer on top of iRODS that leverages its features of replication, metadata, and resource management to automate downstream data-to-compute workflows, from the tape archive (slowest tier) down to the local fast NVMe disks; simulation results are pushed upstream to the parallel shared filesystem and then to the tape archive, while maintaining data lineage for traceability.
+                    <br/><br/>
+                    The solution, called "hpcrdmflow", is an abstraction layer that allows users to deploy iRODS as an ephemeral service using Apptainer entirely in user space. This solution can also be deployed system-wide by administrators. Data movement can be triggered by metadata tagging or through time-based triggers, allowing users to automate such movements by targeting datasets or results rather than using traditional copy, move, or rsync operations. Upon HPC job completion, the data is automatically moved upstream and metadata is enriched with information from scheduler logs. A small TUI has also been developed to enhance interactive findability and inspection.
+                    <br/><br/>
+                    Performance optimization is a cornerstone of the design of this solution. Typical transfers via iRODS achieve a few hundred MB/s using traditional clients unless parameters are tuned. We have implemented a sidecar solution that is enabled by default and runs out of the box when "hpcrdmflow" is deployed. It uses InfiniBand for operations such as dataset scatter, broadcast, and gather across compute nodes, achieving up to 5 GB/s point-to-point throughput. Broadcasts scale linearly with the number of compute nodes, reaching tens of GB/s aggregate transfer speeds.
+                </div>
+                <div class="space_half"></div>
+
+            <div class="space phone_hide"></div>
             <div class="space"></div>
 
         </div>
