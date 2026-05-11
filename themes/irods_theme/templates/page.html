@@ -20,7 +20,22 @@
                         </div>
                     </div>
 
-                    <div style="position: fixed; right: 20px; width: min-content; text-align: right;">
+
+<style>
+/* Mobile First: Scrolling behavior */
+.news-subscribe {
+  position: absolute;
+}
+
+/* Desktop: Sticky behavior */
+@media (min-width: 768px) {
+  .news-subscribe {
+    position: fixed;
+  }
+}
+</style>
+
+                    <div class="news-subscribe" style="right: 20px; width: min-content; text-align: right;">
                     <form action="https://irods.us8.list-manage.com/subscribe/post?u=881549ea51417a5dfcfa8a8e7&amp;id=e429ab81c2&amp;f_id=004dcbe2f0" method="post">
                         <input type="email" name="EMAIL" id="mce-EMAIL" required="" placeholder="email address">
                         <input type="checkbox" name="group[10257][1]" value=""> Daily<br/>
