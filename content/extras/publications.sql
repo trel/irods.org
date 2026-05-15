@@ -3028,7 +3028,7 @@ INSERT INTO publications VALUES(48,'Conceptualizing Policy-Driven Repository Int
 INSERT INTO publications VALUES(49,'Community-Driven Development of Preservation Services',NULL,'2010-03-25');
 INSERT INTO publications VALUES(50,'Enhancing iRODS Integration: Jargon and an Evolving iRODS Service Model',NULL,'2010-03-25');
 INSERT INTO publications VALUES(51,'iRODS Task Prioritization',NULL,'2010-03-26');
-INSERT INTO publications VALUES(52,'Q&amp;A',NULL,'2010-03-26');
+INSERT INTO publications VALUES(52,'Q&A',NULL,'2010-03-26');
 INSERT INTO publications VALUES(53,'iRODS Security',NULL,'2010-03-26');
 INSERT INTO publications VALUES(54,'Workflow Integration',NULL,'2010-03-26');
 INSERT INTO publications VALUES(55,'iRODS Client List',NULL,'2010-03-26');

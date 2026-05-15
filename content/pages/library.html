@@ -87,6 +87,56 @@
             box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
         }
 
+        .active-filters {
+            margin-top: 12px;
+        }
+
+        .active-filters:empty {
+            display: none;
+        }
+
+        .active-filters-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .active-filter-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .active-filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border: 1px solid #18bc9c;
+            border-radius: 999px;
+            background: #e9faf6;
+            color: #106b59;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        .active-filter-chip:hover {
+            background: #18bc9c;
+            border-color: #18bc9c;
+            color: white;
+        }
+
+        .active-filter-chip-label {
+            font-weight: 600;
+        }
+
+        .active-filter-chip-remove {
+            font-weight: 700;
+            line-height: 1;
+        }
+
         .facet {
             margin-bottom: 20px;
         }
@@ -613,6 +663,7 @@
                 <button onclick="clearSearch()" style="padding: 0 20px; background: #f0f0f0; border: 2px solid #e0e0e0; border-radius: 4px; cursor: pointer; font-weight: 500; transition: all 0.2s; white-space: nowrap;" onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f0f0f0'">Clear</button>
                 <input type="text" id="searchInput" class="search-input" placeholder="Search titles, abstracts, authors, organizations, events..." style="flex: 1; margin: 0;">
             </div>
+            <div class="active-filters" id="activeFilters"></div>
         </div>
 
         <div class="sidebar" id="sidebar">
@@ -679,7 +730,7 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/sql.js@1.8.0/dist/sql-wasm.js"></script>
+    <script src="https://unpkg.com/sql.js@1.14.1/dist/sql-wasm.js"></script>
     <script>
         let db = null;
         let allResults = [];
@@ -693,6 +744,14 @@
             events: new Set(),
             docTypes: new Set(),
             years: new Set()
+        };
+
+        const filterLabels = {
+            authors: 'Author',
+            organizations: 'Organization',
+            events: 'Event',
+            docTypes: 'Document Type',
+            years: 'Year'
         };
 
         const tableSchemas = {
@@ -732,14 +791,12 @@
 
         async function initDB() {
             const SQL = await initSqlJs({
-                locateFile: file => `https://unpkg.com/sql.js@1.8.0/dist/${file}`
+                locateFile: file => `https://unpkg.com/sql.js@1.14.1/dist/${file}`
             });
             db = new SQL.Database();
             const response = await fetch('publications.sql');
             const sqlScript = await response.text();
             db.exec(sqlScript);
-            renderResults();
-            loadFacets();
         }
 
         function loadFacets() {
@@ -867,18 +924,18 @@
              renderFacet('docTypeFacets', docTypesWithCounts, 'docTypes', counts.docTypes);
              }
 
-         function renderFacet(elementId, items, filterKey, counts = {}) {
-             const el = document.getElementById(elementId);
-             // Sort items by count (highest first)
-             const sortedItems = items.sort((a, b) => (counts[b] || 0) - (counts[a] || 0));
-             el.innerHTML = sortedItems.map(item => `
-                 <div class="facet-item ${filters[filterKey].has(item) ? 'active' : ''}" 
-                      onclick="toggleFilter('${filterKey}', '${item.replace(/'/g, "\\'")}')">
-                     <span>${item}</span>
-                     <span class="facet-count">${counts[item] || 0}</span>
-                 </div>
-             `).join('');
-         }
+        function renderFacet(elementId, items, filterKey, counts = {}) {
+            const el = document.getElementById(elementId);
+            // Sort items by count (highest first)
+            const sortedItems = items.sort((a, b) => (counts[b] || 0) - (counts[a] || 0));
+            el.innerHTML = sortedItems.map(item => `
+                <div class="facet-item ${filters[filterKey].has(item) ? 'active' : ''}"
+                     onclick="toggleFilter('${filterKey}', '${escapeForSingleQuotedJs(item)}')">
+                    <span>${escapeHtml(item)}</span>
+                    <span class="facet-count">${counts[item] || 0}</span>
+                </div>
+            `).join('');
+        }
 
         function toggleFilter(filterKey, value) {
             if (filters[filterKey].has(value)) {
@@ -886,9 +943,7 @@
             } else {
                 filters[filterKey].add(value);
             }
-            renderResults();
-            loadFacets();
-            updateURL();
+            refreshPublicationsView();
         }
 
         function searchPublications(query) {
@@ -1091,9 +1146,9 @@
                     ${pub.abstract ? `<div class="pub-abstract">${toParagraphs(escapeHtml(pub.abstract))}</div>` : ''}
                     ${authors.length > 0 || orgs.length > 0 || events.length > 0 ? `
                         <div class="pub-people">
-                            ${authors.map(a => `<span class="person-tag" onclick="setFilter('authors', '${a.replace(/'/g, "\\'")}')">${escapeHtml(a)}</span>`).join('')}
-                            ${orgs.map(o => `<span class="org-tag" onclick="setFilter('organizations', '${o.replace(/'/g, "\\'")}')">${escapeHtml(o)}</span>`).join('')}
-                            ${events.map(e => `<span class="event-tag" onclick="setFilter('events', '${e.replace(/'/g, "\\'")}')">${escapeHtml(e)}</span>`).join('')}
+                            ${authors.map(a => `<span class="person-tag" onclick="setFilter('authors', '${escapeForSingleQuotedJs(a)}')">${escapeHtml(a)}</span>`).join('')}
+                            ${orgs.map(o => `<span class="org-tag" onclick="setFilter('organizations', '${escapeForSingleQuotedJs(o)}')">${escapeHtml(o)}</span>`).join('')}
+                            ${events.map(e => `<span class="event-tag" onclick="setFilter('events', '${escapeForSingleQuotedJs(e)}')">${escapeHtml(e)}</span>`).join('')}
                         </div>
                     ` : ''}
                     ${documentLinks.length > 0 ? `
@@ -1116,15 +1171,7 @@
         }
 
         function setFilter(filterKey, value) {
-            // Toggle: add or remove value while keeping other filters intact
-            if (filters[filterKey].has(value)) {
-                filters[filterKey].delete(value);
-            } else {
-                filters[filterKey].add(value);
-            }
-            renderResults();
-            loadFacets();
-            updateURL();
+            toggleFilter(filterKey, value);
         }
 
         function clearSearch() {
@@ -1134,9 +1181,7 @@
             filters.events.clear();
             filters.docTypes.clear();
             filters.years.clear();
-            renderResults();
-            loadFacets();
-            updateURL();
+            refreshPublicationsView();
         }
 
         function toParagraphs(text) {
@@ -1152,6 +1197,51 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+
+        function escapeForSingleQuotedJs(value) {
+            return String(value)
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'")
+                .replace(/\r?\n/g, '\\n');
+        }
+
+        function renderActiveFilters() {
+            const activeFiltersEl = document.getElementById('activeFilters');
+            const activeFilters = [];
+
+            Object.keys(filterLabels).forEach(filterKey => {
+                filters[filterKey].forEach(value => {
+                    activeFilters.push({ filterKey, value, label: filterLabels[filterKey] });
+                });
+            });
+
+            if (activeFilters.length === 0) {
+                activeFiltersEl.innerHTML = '';
+                return;
+            }
+
+            activeFiltersEl.innerHTML = `
+                <div class="active-filters-label">Active filters</div>
+                <div class="active-filter-list">
+                    ${activeFilters.map(({ filterKey, value, label }) => `
+                        <button type="button" class="active-filter-chip" onclick="toggleFilter('${filterKey}', '${escapeForSingleQuotedJs(value)}')">
+                            <span class="active-filter-chip-label">${escapeHtml(label)}:</span>
+                            <span>${escapeHtml(value)}</span>
+                            <span class="active-filter-chip-remove">x</span>
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function refreshPublicationsView(updateHistory = true) {
+            renderResults();
+            loadFacets();
+            renderActiveFilters();
+            if (updateHistory) {
+                updateURL();
+            }
         }
 
         function updateURL() {
@@ -1217,9 +1307,7 @@
             }
 
             document.getElementById('searchInput').addEventListener('input', () => {
-            renderResults();
-            loadFacets();
-            updateURL();
+            refreshPublicationsView();
         });
         
         window.addEventListener('filterChanged', updateURL);
@@ -1856,8 +1944,7 @@
 
         initDB().then(() => {
             loadFromURL();
-            renderResults();
-            loadFacets();
+            refreshPublicationsView(false);
             applyEditMode();
         });
     </script>
